@@ -1,4 +1,4 @@
-# SIGO - Sistema Integrado de Gestão de Ocorrências e Patrulhamento Comunitário
+# SIGO — Sistema Integrado de Gestão de Ocorrências e Patrulhamento Comunitário
 
 Projeto acadêmico de banco de dados relacional para registro, triagem, despacho e acompanhamento de ocorrências de segurança em contexto municipal ou comunitário.
 
@@ -6,7 +6,7 @@ Projeto acadêmico de banco de dados relacional para registro, triagem, despacho
 
 - **Instituição:** Universidade Católica de Brasília
 - **Disciplina:** Laboratório de Banco de Dados
-- **Professor:** Efferson Salomão Rodrigues
+- **Professor:** Jefferson Salomão Rodrigues
 - **Data de entrega:** 20/09/2026
 - **Tema:** Segurança
 
@@ -22,16 +22,20 @@ projeto-sigo/
 ├── .gitignore
 ├── README.md
 ├── docs/
-│   ├── Trabalho_Completo_SIGO_Seguranca.pdf
+│   ├── Trabalho_Completo_SIGO_Seguranca_REVISADO.pdf
 │   └── diagramas/
-│       ├── Fig1_DER_conceitual_pessoa_chen.svg
-│       ├── Fig2_DER_conceitual_ocorrencia_chen.svg
-│       ├── Fig3_DER_conceitual_fracas_chen.svg
-│       ├── Fig4_DER_conceitual_recursos_chen.svg
-│       ├── Fig5_logico_pessoas.svg
-│       ├── Fig6_logico_recursos.svg
-│       ├── Fig7_logico_ocorrencia.svg
-│       └── Fig8_logico_despacho.svg
+│       ├── Fig01_conceitual_pessoa.(png|svg)
+│       ├── Fig02_conceitual_ocorrencia.(png|svg)
+│       ├── Fig03_conceitual_entidades_fracas.(png|svg)
+│       ├── Fig04_conceitual_recursos.(png|svg)
+│       ├── Fig05_logico_pessoas.(png|svg)
+│       ├── Fig06_logico_recursos.(png|svg)
+│       ├── Fig07_logico_ocorrencia.(png|svg)
+│       ├── Fig08_logico_despacho.(png|svg)
+│       ├── Fig09_fisico_visao_geral.(png|svg)
+│       ├── Fig10_fisico_identidades.(png|svg)
+│       ├── Fig11_fisico_recursos_ocorrencia.(png|svg)
+│       └── Fig12_fisico_vinculos_auditoria.(png|svg)
 └── sql/
     └── sigo_banco_dados.sql
 ```
@@ -40,11 +44,11 @@ projeto-sigo/
 
 - descrição, contexto, justificativa e escopo do tema;
 - DER conceitual em notação de Chen;
-- entidades fortes, fracas e especializadas;
+- entidades fortes, fracas, associativas e especializadas;
 - relacionamentos 1:1, 1:N, M:N e ternário;
 - atributos simples, compostos, multivalorados, derivados e identificadores;
 - diagrama lógico com tipos, PKs, FKs, restrições e coerência com o DER;
-- modelagem física voltada ao MySQL;
+- quatro diagramas físicos voltados ao MySQL;
 - normalização e regras de integridade;
 - script autocontido com 17 tabelas;
 - população de dados;
@@ -52,6 +56,8 @@ projeto-sigo/
 - atualizações U1 a U4 com transações;
 - teste T11 da especialização exclusiva de `pessoa`;
 - documentação, plano de testes e divisão das atividades.
+
+O projeto contém diagramas conceituais, lógicos e físicos. As 12 figuras também estão disponíveis em `docs/diagramas/` nos formatos PNG, para visualização rápida, e SVG, para ampliação sem perda de qualidade. `Envolvimento` e `Equipe_Agente` são entidades associativas que representam relacionamentos M:N e guardam atributos próprios. O relacionamento ternário entre Ocorrência, Equipe e Veículo é convertido na tabela `acionamento`.
 
 ## Requisitos
 
@@ -68,7 +74,7 @@ A versão mínima é necessária porque versões anteriores do MySQL aceitavam c
 3. Se possuir permissão para criar bancos, descomente as linhas `CREATE DATABASE` e `USE` do início do arquivo. Caso contrário, mantenha-as comentadas.
 4. Execute o arquivo completo.
 5. Confira os totais apresentados ao final e os resultados das consultas Q1 a Q12.
-6. Para demonstrar o T11, descomente somente o `INSERT` indicado nessa seção. A rejeição pela chave estrangeira composta é o resultado esperado.
+6. Execute o teste negativo T11 separadamente, depois da carga, usando a instrução comentada indicada no SQL. A tentativa de cadastrar como operador uma pessoa já marcada como agente deve ser rejeitada pela FK composta.
 
 Pela linha de comando, com um schema existente chamado `projeto_sigo`, a execução equivalente é:
 
@@ -78,7 +84,9 @@ mysql -u SEU_USUARIO -p projeto_sigo < sql/sigo_banco_dados.sql
 
 O nome do schema é apenas um exemplo e pode ser substituído pelo schema fornecido pelo ambiente acadêmico.
 
-O script inicia com `DROP TABLE IF EXISTS` em ordem segura, permitindo repetir a execução em ambiente de desenvolvimento. As atualizações U1 a U4 são demonstradas dentro de transações encerradas com `ROLLBACK`, preservando a massa de dados original.
+O script inicia com `DROP TABLE IF EXISTS` em ordem segura, permitindo repetir a execução em ambiente de desenvolvimento. As atualizações U1 a U4 são demonstradas dentro de transações encerradas com `ROLLBACK`, preservando a massa de dados acadêmica. Em produção, após validar todas as operações da transação, a aplicação confirmaria a operação com `COMMIT`.
+
+Para testar o T11 isoladamente, conecte-se ao schema já carregado e execute apenas o `INSERT` indicado na seção T11 do SQL. A rejeição pela FK composta é o resultado esperado; não execute esse teste como parte de uma carga bem-sucedida.
 
 ## Regra RN03
 
@@ -90,9 +98,7 @@ A totalidade da especialização permanece como regra da aplicação, pois sua i
 
 Nome previsto: `projeto-sigo`
 
-Endereço previsto: `https://github.com/MarcosAAurelio/projeto-sigo`
-
-O endereço só ficará acessível após a criação e publicação do repositório na conta correspondente.
+Endereço: `https://github.com/MarcosAAurelio/projeto-sigo`
 
 ## Observação
 

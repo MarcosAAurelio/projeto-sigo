@@ -1,6 +1,6 @@
 -- SIGO - Sistema Integrado de Gestao de Ocorrencias e Patrulhamento Comunitario
 -- Disciplina: Laboratorio de Banco de Dados - UCB
--- Professor: Efferson Salomao Rodrigues
+-- Professor: Jefferson Salomao Rodrigues
 -- Integrantes: Marcos Aurelio Moreira Costa Rabelo (UC25104233)
 --              Pedro Caua Valentin de Moraes (UC25200946)
 -- SGBD: MySQL 8.0.16 ou superior
@@ -294,7 +294,7 @@ CREATE TABLE encerramento_ocorrencia (
     solucao_adotada TEXT NOT NULL,
     houve_encaminhamento BOOLEAN NOT NULL DEFAULT FALSE,
     orgao_encaminhado VARCHAR(120),
-    id_agente_responsavel INT UNSIGNED,
+    id_agente_responsavel INT UNSIGNED NOT NULL,
     PRIMARY KEY (id_ocorrencia),
     CONSTRAINT ck_encerramento_orgao CHECK (
         houve_encaminhamento = FALSE OR orgao_encaminhado IS NOT NULL
@@ -302,7 +302,7 @@ CREATE TABLE encerramento_ocorrencia (
     CONSTRAINT fk_encerramento_ocorrencia FOREIGN KEY (id_ocorrencia)
         REFERENCES ocorrencia (id_ocorrencia) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_encerramento_agente FOREIGN KEY (id_agente_responsavel)
-        REFERENCES agente (id_pessoa) ON UPDATE CASCADE ON DELETE SET NULL
+        REFERENCES agente (id_pessoa) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Indices associados as consultas entregues.
@@ -480,7 +480,8 @@ JOIN equipe e ON e.id_equipe = ea.id_equipe
 JOIN agente a ON a.id_pessoa = ea.id_agente
 JOIN pessoa p ON p.id_pessoa = a.id_pessoa
 JOIN unidade_seguranca u ON u.id_unidade = e.id_unidade
-WHERE ea.data_fim IS NULL OR ea.data_fim >= CURRENT_DATE
+WHERE ea.data_inicio <= CURRENT_DATE
+  AND (ea.data_fim IS NULL OR ea.data_fim >= CURRENT_DATE)
 ORDER BY e.nome, ea.funcao_na_equipe;
 
 -- Q4 - tempo de deslocamento de cada acionamento concluido.
@@ -560,6 +561,7 @@ ORDER BY taxa_encerramento_pct DESC;
 -- ============================================================
 -- 4. UPDATES E TRANSACOES (U1 A U4)
 -- Executados com ROLLBACK para demonstracao sem alterar a massa final.
+-- Em uma operacao real validada, a aplicacao confirmaria a transacao com COMMIT.
 -- ============================================================
 
 -- U1 - chegada da equipe, mudanca de status e historico atomicos.
