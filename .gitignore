@@ -1,0 +1,22 @@
+# Arquivos do sistema operacional e editores
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Segredos, configuracoes locais e artefatos temporarios
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.bak
+tmp/
+temp/
+
+# Dumps locais que nao fazem parte da entrega
+*.dump
+*.sql.gz
