@@ -21,21 +21,6 @@ Projeto acadêmico de banco de dados relacional para registro, triagem, despacho
 projeto-sigo/
 ├── .gitignore
 ├── README.md
-├── docs/
-│   ├── Trabalho_Completo_SIGO_Seguranca_REVISADO.pdf
-│   └── diagramas/
-│       ├── Fig01_conceitual_pessoa.(png|svg)
-│       ├── Fig02_conceitual_ocorrencia.(png|svg)
-│       ├── Fig03_conceitual_entidades_fracas.(png|svg)
-│       ├── Fig04_conceitual_recursos.(png|svg)
-│       ├── Fig05_logico_pessoas.(png|svg)
-│       ├── Fig06_logico_recursos.(png|svg)
-│       ├── Fig07_logico_ocorrencia.(png|svg)
-│       ├── Fig08_logico_despacho.(png|svg)
-│       ├── Fig09_fisico_visao_geral.(png|svg)
-│       ├── Fig10_fisico_identidades.(png|svg)
-│       ├── Fig11_fisico_recursos_ocorrencia.(png|svg)
-│       └── Fig12_fisico_vinculos_auditoria.(png|svg)
 └── sql/
     └── sigo_banco_dados.sql
 ```
@@ -57,7 +42,7 @@ projeto-sigo/
 - teste T11 da especialização exclusiva de `pessoa`;
 - documentação, plano de testes e divisão das atividades.
 
-O projeto contém diagramas conceituais, lógicos e físicos. As 12 figuras também estão disponíveis em `docs/diagramas/` nos formatos PNG, para visualização rápida, e SVG, para ampliação sem perda de qualidade. `Envolvimento` e `Equipe_Agente` são entidades associativas que representam relacionamentos M:N e guardam atributos próprios. O relacionamento ternário entre Ocorrência, Equipe e Veículo é convertido na tabela `acionamento`.
+O trabalho acadêmico contém 12 diagramas conceituais, lógicos e físicos incorporados ao PDF entregue separadamente. O repositório do GitHub contém somente este README, o `.gitignore` e o script `sql/sigo_banco_dados.sql`. `Envolvimento` e `Equipe_Agente` são entidades associativas que representam relacionamentos M:N e guardam atributos próprios. O relacionamento ternário entre Ocorrência, Equipe e Veículo é convertido na tabela `acionamento`.
 
 ## Requisitos
 
@@ -69,20 +54,24 @@ A versão mínima é necessária porque versões anteriores do MySQL aceitavam c
 
 ## Como executar
 
-1. Abra uma conexão MySQL 8 e selecione um schema no qual tenha permissão para criar tabelas.
+1. Abra uma conexão MySQL 8 com um usuário que tenha permissão para criar bancos de dados.
 2. Abra `sql/sigo_banco_dados.sql`.
-3. Se possuir permissão para criar bancos, descomente as linhas `CREATE DATABASE` e `USE` do início do arquivo. Caso contrário, mantenha-as comentadas.
-4. Execute o arquivo completo.
-5. Confira os totais apresentados ao final e os resultados das consultas Q1 a Q12.
-6. Execute o teste negativo T11 separadamente, depois da carga, usando a instrução comentada indicada no SQL. A tentativa de cadastrar como operador uma pessoa já marcada como agente deve ser rejeitada pela FK composta.
+3. Execute o arquivo completo. O próprio script cria o banco `projeto_sigo` com codificação `utf8mb4` e seleciona esse banco antes de criar as tabelas.
+4. Confira os totais apresentados ao final e os resultados das consultas Q1 a Q12.
+5. Execute o teste negativo T11 separadamente, depois da carga, usando a instrução comentada indicada no SQL. A tentativa de cadastrar como operador uma pessoa já marcada como agente deve ser rejeitada pela FK composta.
 
-Pela linha de comando, com um schema existente chamado `projeto_sigo`, a execução equivalente é:
+Pela linha de comando, a execução equivalente é:
 
 ```bash
-mysql -u SEU_USUARIO -p projeto_sigo < sql/sigo_banco_dados.sql
+mysql -u SEU_USUARIO -p < sql/sigo_banco_dados.sql
 ```
 
-O nome do schema é apenas um exemplo e pode ser substituído pelo schema fornecido pelo ambiente acadêmico.
+O script executa estas instruções no início:
+
+```sql
+CREATE DATABASE projeto_sigo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE projeto_sigo;
+```
 
 O script inicia com `DROP TABLE IF EXISTS` em ordem segura, permitindo repetir a execução em ambiente de desenvolvimento. As atualizações U1 a U4 são demonstradas dentro de transações encerradas com `ROLLBACK`, preservando a massa de dados acadêmica. Em produção, após validar todas as operações da transação, a aplicação confirmaria a operação com `COMMIT`.
 
@@ -99,7 +88,3 @@ A totalidade da especialização permanece como regra da aplicação, pois sua i
 Nome previsto: `projeto-sigo`
 
 Endereço: `https://github.com/MarcosAAurelio/projeto-sigo`
-
-## Observação
-
-Este é um trabalho acadêmico. O SIGO não substitui serviços oficiais de emergência. Em uma implantação real, seriam necessários controles adicionais de autenticação, autorização, auditoria, retenção, criptografia e adequação à LGPD.

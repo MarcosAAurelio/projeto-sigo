@@ -5,9 +5,8 @@
 --              Pedro Caua Valentin de Moraes (UC25200946)
 -- SGBD: MySQL 8.0.16 ou superior
 
--- Caso o usuario possua permissao para criar bancos, descomente:
--- CREATE DATABASE projeto_sigo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE projeto_sigo;
+CREATE DATABASE projeto_sigo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE projeto_sigo;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -33,9 +32,7 @@ DROP TABLE IF EXISTS unidade_seguranca;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
--- ============================================================
 -- 1. DDL - CRIACAO DAS 17 TABELAS
--- ============================================================
 
 CREATE TABLE unidade_seguranca (
     id_unidade INT UNSIGNED AUTO_INCREMENT,
@@ -314,9 +311,7 @@ CREATE INDEX idx_acionamento_equipe_data ON acionamento (id_equipe, data_despach
 CREATE INDEX idx_historico_data ON historico_status (id_ocorrencia, alterado_em);
 CREATE INDEX idx_veiculo_unidade_status ON veiculo (id_unidade, status_veiculo);
 
--- ============================================================
 -- 2. POPULACAO DO BANCO
--- ============================================================
 
 INSERT INTO unidade_seguranca (nome, tipo, telefone, email, ativo) VALUES
 ('Central Integrada de Operacoes', 'CENTRAL', '6133011000', 'central@sigo.gov.br', TRUE),
@@ -448,9 +443,7 @@ INSERT INTO encerramento_ocorrencia
 VALUES
 (4, '2026-09-14 16:25:00', 'Familia localizada; pessoa entregue aos responsaveis.', FALSE, NULL, 5);
 
--- ============================================================
 -- 3. VIEW E CONSULTAS SELECT (Q1 A Q12)
--- ============================================================
 
 CREATE OR REPLACE VIEW vw_fila_ocorrencias AS
 SELECT o.id_ocorrencia, o.protocolo, o.titulo, c.nome AS categoria,
@@ -558,11 +551,9 @@ JOIN ocorrencia o ON o.id_categoria = c.id_categoria
 GROUP BY c.id_categoria, c.nome
 ORDER BY taxa_encerramento_pct DESC;
 
--- ============================================================
 -- 4. UPDATES E TRANSACOES (U1 A U4)
 -- Executados com ROLLBACK para demonstracao sem alterar a massa final.
 -- Em uma operacao real validada, a aplicacao confirmaria a transacao com COMMIT.
--- ============================================================
 
 -- U1 - chegada da equipe, mudanca de status e historico atomicos.
 START TRANSACTION;
@@ -597,9 +588,8 @@ SET prioridade = 'MEDIA', data_atualizacao = GREATEST(data_atualizacao, '2026-09
 WHERE id_categoria = 3 AND descricao LIKE '%sem vitimas%' AND prioridade = 'ALTA';
 ROLLBACK;
 
--- ============================================================
 -- 5. TESTE T11 - EXCLUSIVIDADE DA ESPECIALIZACAO (RN03)
--- ============================================================
+
 -- A pessoa 4 possui tipo_pessoa = 'AGENTE'. A tentativa abaixo deve falhar
 -- pela FK composta, pois nao existe pessoa (4, 'OPERADOR').
 -- Descomente apenas para executar o teste negativo:
